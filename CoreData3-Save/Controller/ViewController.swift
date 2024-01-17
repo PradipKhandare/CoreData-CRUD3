@@ -31,5 +31,9 @@ class ViewController: UIViewController {
         }
     }
     
+    @IBAction func viewDataButtonPressed(_ sender: UIButton) {
+        let detailVC = storyboard?.instantiateViewController(identifier: "DetailViewController") as! DetailViewController
+        self.navigationController?.pushViewController(detailVC, animated: true)
+    }
 }
 
