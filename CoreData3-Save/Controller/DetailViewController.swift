@@ -7,11 +7,16 @@
 
 import UIKit
 
+protocol InsertData {
+    func data(object: [String: String], index: Int, isEdit: Bool)
+}
+
 class DetailViewController: UIViewController {
     
     @IBOutlet weak var tableView: UITableView!
+    var delegate : InsertData!
+    
     var student = [Student]()
-
     override func viewDidLoad() {
         super.viewDidLoad()
         student = DatabaseHelper.dbObject.getData()!
@@ -44,6 +49,16 @@ extension DetailViewController: UITableViewDataSource, UITableViewDelegate
             student = DatabaseHelper.dbObject.deleteData(index: indexPath.row)!
             self.tableView.deleteRows(at: [indexPath], with: .automatic)
         }
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let dict = ["name":student[indexPath.row].name,
+                    "mobile": student[indexPath.row].mobile,
+                    "rollNumber": student[indexPath.row].rollNumber,
+                    "address": student[indexPath.row].address,
+                    "dob": student[indexPath.row].dob]
+        delegate.data(object: dict as! [String: String], index: indexPath.row, isEdit: true)
+        self.navigationController?.popToRootViewController(animated: true)
     }
     
     

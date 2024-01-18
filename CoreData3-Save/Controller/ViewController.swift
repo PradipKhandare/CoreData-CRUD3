@@ -7,8 +7,8 @@
 
 import UIKit
 
-class ViewController: UIViewController {
-    
+class ViewController: UIViewController, InsertData {
+
     @IBOutlet weak var txtName: UITextField!
     @IBOutlet weak var txtRollNumber: UITextField!
     @IBOutlet weak var txtDOB: UITextField!
@@ -17,6 +17,9 @@ class ViewController: UIViewController {
     
     @IBOutlet var allTextFields: [UITextField]!
     
+    var i = Int()
+    var isUpdate = Bool()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
     
@@ -24,7 +27,12 @@ class ViewController: UIViewController {
 
     @IBAction func saveButtonPressed(_ sender: UIButton) {
         let dictOfData = ["name":txtName.text!, "rollNumber":txtRollNumber.text!, "dob": txtDOB.text!, "mobile": txtMobile.text!, "address": txtAddress.text!]
-        DatabaseHelper.dbObject.saveData(obj: dictOfData)
+        
+        if isUpdate == true {
+            DatabaseHelper.dbObject.updateData(object: dictOfData as! [String: String], i: i)
+        }else {
+            DatabaseHelper.dbObject.saveData(obj: dictOfData)
+        }
         
         for textField in allTextFields {
             textField.text = ""
@@ -33,7 +41,18 @@ class ViewController: UIViewController {
     
     @IBAction func viewDataButtonPressed(_ sender: UIButton) {
         let detailVC = storyboard?.instantiateViewController(identifier: "DetailViewController") as! DetailViewController
+        detailVC.delegate = self
         self.navigationController?.pushViewController(detailVC, animated: true)
+    }
+    
+    func data(object: [String : String], index: Int, isEdit: Bool) {
+        txtName.text = object["name"]
+        txtRollNumber.text = object["rollNumber"]
+        txtDOB.text = object["dob"]
+        txtMobile.text = object["mobile"]
+        txtAddress.text = object["address"]
+        i = index
+        isUpdate = isEdit
     }
 }
 

@@ -14,6 +14,7 @@ class DatabaseHelper
     static var dbObject = DatabaseHelper()
     let context = (UIApplication.shared.delegate as? AppDelegate)?.persistentContainer.viewContext
     
+    //MARK: - saveData
     func saveData(obj:[String: String]) {
         let candidate = NSEntityDescription.insertNewObject(forEntityName: "Student", into: context!) as! Student
         candidate.name = obj["name"]
@@ -55,6 +56,22 @@ class DatabaseHelper
         }catch{
             print("Data note deleted successfully, Please try again.")
             return nil
+        }
+    }
+    
+    //MARK: - updateData
+    func updateData(object: [String: String], i: Int) {
+        var student = getData()
+        student![i].name = object["name"]
+        student![i].mobile = object["mobile"]
+        student![i].dob = object["dob"]
+        student![i].address = object["address"]
+        student![i].rollNumber = object["rollNumber"]
+        
+        do{
+            try context?.save()
+        } catch {
+            print("data not updated successfully.")
         }
     }
 }
